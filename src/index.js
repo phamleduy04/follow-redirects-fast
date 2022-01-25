@@ -3,12 +3,12 @@ const parser = require('http-string-parser');
 const net = require('net');
 const resolve = require('util').promisify(getRedirect);
 
-const followRedirects = async ({ url, maxRedirects = 5 }) => {
+const followRedirects = async ({ url, maxRedirects = 5, timeout = 5000 }) => {
     const urlChain = [];
     let redirectCount = 0;
     let timeRequested = 0;
     while (timeRequested < maxRedirects) {
-        const res = await resolve(url);
+        const res = await resolve(url, timeout);
         const location = res.headers[Object.keys(res.headers).find(key => key.toLowerCase() === 'location')];
         if (res.statusCode == 302 || res.statusCode == 301) {
             redirectCount++;
@@ -22,7 +22,7 @@ const followRedirects = async ({ url, maxRedirects = 5 }) => {
 
 };
 
-function getRedirect(url, callback) {
+function getRedirect(url, timeout, callback) {
     const { host, protocol } = new URL(url);
     const raw_request = `GET ${url} HTTP/1.1\r\nUser-Agent: Mozilla 5.0\r\nHost: ${host}\r\nCookie: \r\ncontent-length: 0\r\n\n`;
     let socket;
@@ -32,6 +32,7 @@ function getRedirect(url, callback) {
             servername: host,
             port: 443,
             host,
+            timeout,
         }, () => socket.write(raw_request));
     }
     else {
@@ -40,6 +41,7 @@ function getRedirect(url, callback) {
             servername: host,
             port: 80,
             host,
+            timeout,
         }, () => socket.write(raw_request));
     }
     socket.on('data', (data) => {
