@@ -17,4 +17,7 @@ const followRedirects = require('follow-redirects-fast');
 })();
 ```
 
-
+- Options List:
+    - url (**required**): URL you want to follow redirect
+    - maxRedirects (default: 5): Max Redirects you want to follow
+    - timeout (default: 5000): Time in ms you want to wait until error

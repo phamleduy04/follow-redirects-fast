@@ -1,7 +1,7 @@
 {
   "name": "follow-redirects-fast",
   "version": "1.0.1",
-  "description": "Follow Redirect Faster by automatically follows redirects. Using low level package net and tls",
+  "description": "AboutFollow Redirect package using low level package net and tls.",
   "main": "index.js",
   "repository": "https://github.com/phamleduy04/follow-redirects-fast.git",
   "author": "Duy Pham Le <phamleduy04@gmail.com>",
