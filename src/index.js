@@ -2,23 +2,30 @@ const tls = require('tls');
 const parser = require('http-string-parser');
 const net = require('net');
 const resolve = require('util').promisify(getRedirect);
+const urlRegex = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g;
 
 const followRedirects = async ({ url, maxRedirects = 5, timeout = 5000 }) => {
-    const urlChain = [];
-    let redirectCount = 0;
-    let timeRequested = 0;
-    while (timeRequested < maxRedirects) {
-        const res = await resolve(url, timeout);
-        const location = res.headers[Object.keys(res.headers).find(key => key.toLowerCase() === 'location')];
-        if (res.statusCode == 302 || res.statusCode == 301) {
-            redirectCount++;
-            url = location;
-            urlChain.push(url);
+    try {
+        if (!url || !urlRegex.test(url)) throw ("Not a valid URL");
+        const urlChain = [];
+        let redirectCount = 0;
+        let timeRequested = 0;
+        while (timeRequested < maxRedirects) {
+            const res = await resolve(url, timeout);
+            const location = res.headers[Object.keys(res.headers).find(key => key.toLowerCase() === 'location')];
+            if (res.statusCode == 302 || res.statusCode == 301) {
+                redirectCount++;
+                url = location;
+                urlChain.push(url);
+            }
+            else break;
+            timeRequested++;
         }
-        else break;
-        timeRequested++;
+        return { urlChain, lastURL: urlChain[urlChain.length - 1], redirectCount };
     }
-    return { urlChain, lastURL: urlChain[urlChain.length - 1], redirectCount };
+    catch (err) {
+        throw err;
+    }
 
 };
 
