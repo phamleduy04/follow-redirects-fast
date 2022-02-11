@@ -24,14 +24,14 @@ const followRedirects = async ({ url, maxRedirects = 5, timeout = 5000 }) => {
         return { urlChain, lastURL: urlChain[urlChain.length - 1], redirectCount };
     }
     catch (err) {
-        throw err;
+        throw new Error(err);
     }
 
 };
 
 function getRedirect(url, timeout, callback) {
     const { host, protocol } = new URL(url);
-    const raw_request = `GET ${url} HTTP/1.1\r\nUser-Agent: Mozilla 5.0\r\nHost: ${host}\r\nCookie: \r\ncontent-length: 0\r\n\n`;
+    const raw_request = `GET ${url} HTTP/1.1\r\nUser-Agent: Mozilla 5.0\r\nHost: ${host}\r\nCookie: \r\nContent-length: 0\r\n\n`;
     let socket;
     if (protocol.startsWith('https')) {
         socket = tls.connect({
@@ -41,8 +41,7 @@ function getRedirect(url, timeout, callback) {
             host,
             timeout,
         }, () => socket.write(raw_request));
-    }
-    else {
+    } else {
         socket = net.connect({
             highWaterMark: 16384,
             servername: host,
