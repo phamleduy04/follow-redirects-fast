@@ -12,9 +12,14 @@ const followRedirects = async ({ url, maxRedirects = 5, timeout = 5000 }) => {
         let timeRequested = 0;
         while (timeRequested < maxRedirects) {
             const res = await resolve(url, timeout);
-            const location = res.headers[Object.keys(res.headers).find(key => key.toLowerCase() === 'location')];
+            let location = res.headers[Object.keys(res.headers).find(key => key.toLowerCase() === 'location')];
             if (res.statusCode == 302 || res.statusCode == 301) {
                 redirectCount++;
+                if(!urlRegex.test(location)){
+                    location = url + location;
+                    if(!urlRegex.test(location))
+                        break;
+                }
                 url = location;
                 urlChain.push(url);
             }
