@@ -15,12 +15,11 @@ const followRedirects = async ({ url, maxRedirects = 5, timeout = 5000 }) => {
             let location = res.headers[Object.keys(res.headers).find(key => key.toLowerCase() === 'location')];
             if (res.statusCode == 302 || res.statusCode == 301) {
                 redirectCount++;
-                if(!urlRegex.test(location)){
+                if(!urlRegex.test(location)) {
                     location = (location[[0]] == "/") ? location.substring(1) : location;
                     url = (url.slice(-1) == "/") ? url.substring(0, url.length - 1) : url;
-                    location = [url,location].join("/");
-                    if(!urlRegex.test(location))
-                        break;
+                    location = [url, location].join("/");
+                    if (!urlRegex.test(location)) break;
                 }
                 url = location;
                 urlChain.push(url);
