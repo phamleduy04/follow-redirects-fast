@@ -7,7 +7,7 @@ const urlRegex = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-
 const followRedirects = async ({ url, maxRedirects = 5, timeout = 5000 }) => {
     try {
         if (!url || !urlRegex.test(url)) throw ("Not a valid URL");
-        const urlChain = [];
+        const urlChain = [url];
         let redirectCount = 0;
         let timeRequested = 0;
         while (timeRequested < maxRedirects) {
