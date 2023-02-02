@@ -56,6 +56,7 @@ function getRedirect(url, timeout, callback) {
             timeout,
         }, () => socket.write(raw_request));
     }
+    socket.on('error', (err) => callback(err));
     socket.on('data', (data) => {
         socket.destroy();
         const parsed = parser.parseResponse(data.toString());
