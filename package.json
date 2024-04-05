@@ -1,8 +1,9 @@
 {
   "name": "follow-redirects-fast",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "AboutFollow Redirect package using low level package net and tls.",
   "main": "index.js",
+  "types": "src/index.d.ts",
   "repository": "https://github.com/phamleduy04/follow-redirects-fast.git",
   "author": "Duy Pham Le <phamleduy04@gmail.com>",
   "license": "MIT",
@@ -11,7 +12,7 @@
     "http-string-parser": "^0.0.6"
   },
   "devDependencies": {
-    "eslint": "^8.33.0"
+    "eslint": "^8.57.0"
   },
   "scripts": {
     "test": "node test.js",
